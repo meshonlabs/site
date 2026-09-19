@@ -154,6 +154,19 @@
   .form-status.ok { display: block; background: #EAF9F1; border: 1px solid #BFE8D2; color: #157347; }
   .form-status.err { display: block; background: #FDEFEF; border: 1px solid #F3C6C6; color: #B42323; }
 
+  /* ---------- contact popup ---------- */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(6,20,40,.55); z-index: 50;
+    display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: #fff; border-radius: 16px; width: 100%; max-width: 540px; max-height: 92vh; overflow-y: auto;
+    position: relative; padding: 30px; box-shadow: 0 30px 80px rgba(5,52,118,.28); animation: pop .22s ease; }
+  @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.98); } }
+  .modal-close { position: absolute; top: 14px; right: 14px; border: none; background: var(--bg-alt); color: var(--muted);
+    width: 34px; height: 34px; border-radius: 50%; font-size: 15px; cursor: pointer; }
+  .modal-close:hover { color: var(--navy); }
+  .modal .form-card { border: none; box-shadow: none; padding: 0; }
+  body.modal-open { overflow: hidden; }
+
   footer { border-top: 1px solid var(--line); padding: 26px 0; color: var(--soft); font-size: 13.5px; }
   footer .wrap { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   footer a { color: var(--muted); text-decoration: none; }
@@ -162,6 +175,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .fade { opacity: 1; transform: none; transition: none; }
+    .modal { animation: none; }
   }
 </style>
 </head>
@@ -184,7 +198,7 @@
         <a href="#services">Services</a>
         <a href="#process">Process</a>
       </div>
-      <a class="nav-cta" href="#contact">Contact us</a>
+      <a class="nav-cta js-open-form" href="#contact">Contact us</a>
     </div>
   </div>
 </nav>
@@ -195,7 +209,7 @@
     <h1 class="fade in d1">Software, built properly.<br/><span class="accent">AI, wired in.</span></h1>
     <p class="sub fade in d2">Meshon Labs is a founder-led IT services team. We design, build and run the software your business depends on — web platforms, custom systems, integrations and applied AI.</p>
     <div class="cta fade in d3">
-      <a class="btn btn-primary" href="#contact">Start a project</a>
+      <a class="btn btn-primary js-open-form" href="#contact">Start a project</a>
       <a class="arrow-link" href="#services">What we build →</a>
     </div>
     <div class="hero-note fade in d3">Response within 24 hours · Project-based or dedicated team</div>
@@ -343,41 +357,17 @@
 </section>
 
 <section id="contact">
-  <div class="wrap">
+  <div class="wrap" style="text-align:center;">
     <div class="kicker fade">Contact</div>
     <h2 class="fade d1">Ready to build something that lasts?</h2>
-    <div class="contact-grid">
-      <div class="contact-info fade d1">
-        <p class="lead">Tell us about your project and we'll set up a call with the team who'll actually build it. The first call is free, and the advice is honest — even when the answer is "you don't need custom software for this."</p>
-        <a class="mail" href="mailto:hello@meshonlabs.in">hello@meshonlabs.in</a>
-        <div class="socials">
-          <a href="https://github.com/meshonlabs" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://www.linkedin.com/company/meshon-labs" target="_blank" rel="noopener">LinkedIn</a>
-        </div>
+    <p class="lead fade d2" style="margin:0 auto 28px;">Tell us about your project and we'll set up a call with the team who'll actually build it. The first call is free — and the advice is honest, even when the answer is "you don't need custom software for this."</p>
+    <button class="btn btn-primary js-open-form fade d2" type="button" style="font-size:16px; padding:14px 32px; font-family:inherit; cursor:pointer;">Start a conversation</button>
+    <p class="hero-note fade d3" style="margin-top:20px;">or write to <a href="mailto:hello@meshonlabs.in" style="color:var(--blue); text-decoration:none; font-weight:600;">hello@meshonlabs.in</a></p>
+    <div class="contact-info fade d3" style="margin-top:8px;">
+      <div class="socials" style="justify-content:center;">
+        <a href="https://github.com/meshonlabs" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/company/meshon-labs" target="_blank" rel="noopener">LinkedIn</a>
       </div>
-      <form class="form-card fade d2" id="contactForm" novalidate>
-        <h3>Start a conversation</h3>
-        <div class="frow">
-          <div class="field"><label for="cf-name">Your name</label><input id="cf-name" name="name" type="text" required autocomplete="name" placeholder="Full name" /></div>
-          <div class="field"><label for="cf-email">Email</label><input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" /></div>
-        </div>
-        <div class="frow">
-          <div class="field"><label for="cf-phone">Phone / WhatsApp (optional)</label><input id="cf-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 ..." /></div>
-          <div class="field"><label for="cf-budget">Budget (optional)</label>
-            <select id="cf-budget" name="budget">
-              <option value="">Select a range</option>
-              <option>Under ₹50,000</option>
-              <option>₹50,000 – ₹2,00,000</option>
-              <option>₹2,00,000+</option>
-              <option>Not sure yet</option>
-            </select>
-          </div>
-        </div>
-        <div class="field"><label for="cf-msg">What do you need?</label><textarea id="cf-msg" name="message" required placeholder="A few lines about your business and what you want to build..."></textarea></div>
-        <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button class="btn btn-primary" type="submit" id="cf-submit">Send message</button>
-        <div class="form-status" id="cf-status" role="status"></div>
-      </form>
     </div>
   </div>
 </section>
@@ -388,6 +378,24 @@
     <span><a href="mailto:hello@meshonlabs.in">hello@meshonlabs.in</a> · meshonlabs.in</span>
   </div>
 </footer>
+
+<div class="modal-backdrop" id="formModal" role="dialog" aria-modal="true" aria-label="Start a conversation">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" type="button" aria-label="Close form">&#10005;</button>
+    <form class="form-card" id="contactForm" novalidate>
+      <h3>Start a conversation</h3>
+      <div class="frow">
+        <div class="field"><label for="cf-name">Your name</label><input id="cf-name" name="name" type="text" required autocomplete="name" placeholder="Full name" /></div>
+        <div class="field"><label for="cf-email">Email</label><input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" /></div>
+      </div>
+      <div class="field"><label for="cf-phone">Phone / WhatsApp (optional)</label><input id="cf-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 ..." /></div>
+      <div class="field"><label for="cf-msg">What do you need?</label><textarea id="cf-msg" name="message" required placeholder="A few lines about your business and what you want to build..."></textarea></div>
+      <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <button class="btn btn-primary" type="submit" id="cf-submit">Send message</button>
+      <div class="form-status" id="cf-status" role="status"></div>
+    </form>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -458,6 +466,27 @@
     ideIo.observe(ide);
   }
 
+  /* ---------- contact popup ---------- */
+  var modal = document.getElementById("formModal");
+
+  function openModal() {
+    modal.classList.add("open");
+    document.body.classList.add("modal-open");
+    var first = modal.querySelector("input:not(.hp)");
+    if (first) setTimeout(function () { first.focus(); }, 80);
+  }
+  function closeModal() {
+    modal.classList.remove("open");
+    document.body.classList.remove("modal-open");
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".js-open-form"), function (btn) {
+    btn.addEventListener("click", function (ev) { ev.preventDefault(); openModal(); });
+  });
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  modal.addEventListener("click", function (ev) { if (ev.target === modal) closeModal(); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") closeModal(); });
+
   /* ---------- contact form ---------- */
   /* Paste your Formspree or Web3Forms endpoint here after creating a free
      account (e.g. "https://formspree.io/f/abcdwxyz"). While empty, the form
@@ -486,7 +515,6 @@
     if (!CONTACT_ENDPOINT) {
       var body = "Name: " + name + "\nEmail: " + email +
         "\nPhone: " + (data.get("phone") || "-") +
-        "\nBudget: " + (data.get("budget") || "-") +
         "\n\n" + message;
       window.location.href = "mailto:hello@meshonlabs.in" +
         "?subject=" + encodeURIComponent("Project enquiry from " + name) +
