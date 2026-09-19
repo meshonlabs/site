@@ -68,6 +68,40 @@
   h2 { font-size: clamp(25px, 3.2vw, 33px); letter-spacing: -.5px; margin: 10px 0 12px; font-weight: 720; color: var(--navy); line-height: 1.25; }
   .lead { color: var(--muted); max-width: 660px; font-size: 16px; }
 
+  /* ---------- showcase (animated IDE) ---------- */
+  .showcase { text-align: center; }
+  .ide { max-width: 860px; margin: 44px auto 0; background: #0D1522; border: 1px solid #16243A; border-radius: 14px;
+         box-shadow: 0 24px 60px rgba(5,52,118,.16); overflow: hidden; text-align: left; }
+  .ide-bar { display: flex; align-items: center; gap: 14px; padding: 11px 16px; background: #0A1019; border-bottom: 1px solid #16243A; }
+  .lights { display: flex; gap: 7px; }
+  .lights i { width: 11px; height: 11px; border-radius: 50%; }
+  .lights i:nth-child(1) { background: #FF5F57; } .lights i:nth-child(2) { background: #FEBC2E; } .lights i:nth-child(3) { background: #28C840; }
+  .ide-tabs { display: flex; gap: 4px; font-family: var(--mono); font-size: 12px; color: #7E8CA3; }
+  .ide-tabs span { padding: 4px 12px; border-radius: 6px; }
+  .ide-tabs span.on { background: #16243A; color: #DCE6F5; }
+  .ai-badge { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px;
+              color: #67E8F9; background: rgba(0,210,255,.07); border: 1px solid rgba(0,210,255,.25); padding: 4px 11px; border-radius: 999px; }
+  .ai-badge i { width: 7px; height: 7px; border-radius: 50%; background: #22D3EE; }
+  .ai-badge.working i { animation: blink 1s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+  .ide-body { display: grid; grid-template-columns: 1.5fr 1fr; }
+  @media (max-width: 760px) { .ide-body { grid-template-columns: 1fr; } }
+  .code { padding: 18px 20px; font-family: var(--mono); font-size: 12.8px; line-height: 1.75; color: #C9D6EA; overflow-x: auto; min-height: 320px; }
+  .cline { white-space: pre; opacity: 0; transform: translateX(8px); transition: opacity .18s ease, transform .18s ease; }
+  .cline.on { opacity: 1; transform: none; }
+  .cline.active::after { content: ""; display: inline-block; width: 8px; height: 15px; background: #22D3EE; margin-left: 2px;
+                         vertical-align: -2px; animation: blink .8s steps(1) infinite; }
+  .kw { color: #7DD3FC; } .fn { color: #FBBF24; } .str { color: #86EFAC; } .com { color: #5B6B84; font-style: italic; }
+  .cls { color: #F0ABFC; } .num { color: #FDA4AF; } .dec { color: #A5B4FC; }
+  .term { border-left: 1px solid #16243A; padding: 18px 18px; font-family: var(--mono); font-size: 12.3px; line-height: 1.85;
+          color: #9FB0C8; background: #0A1019; min-height: 320px; }
+  @media (max-width: 760px) { .term { border-left: none; border-top: 1px solid #16243A; } }
+  .tline { opacity: 0; transform: translateY(4px); transition: opacity .16s ease, transform .16s ease; white-space: pre-wrap; }
+  .tline.on { opacity: 1; transform: none; }
+  .tline .ok { color: #4ADE80; } .tline .cmd { color: #E2E8F0; } .tline .dim { color: #5B6B84; }
+  .ide-caption { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; margin-top: 18px; font-family: var(--mono); font-size: 12px; color: var(--soft); }
+  .ide-caption span b { color: var(--navy); font-weight: 650; }
+
   /* ---------- services ---------- */
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 38px; }
   .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 24px; transition: border-color .15s, box-shadow .15s; }
@@ -189,6 +223,58 @@
         <h3>Care &amp; support</h3>
         <p>For live software — we monitor, maintain and keep improving it, so you never worry about it breaking.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="showcase" class="showcase">
+  <div class="wrap">
+    <div class="kicker fade">How we build</div>
+    <h2 class="fade d1">Working software, while you watch.</h2>
+    <p class="lead fade d2" style="margin: 0 auto;">Our engineers pair with an AI agent that writes most of the code — every line reviewed, then proven with tests before anything reaches your business.</p>
+    <div class="ide fade d2" id="ide" aria-hidden="true">
+      <div class="ide-bar">
+        <div class="lights"><i></i><i></i><i></i></div>
+        <div class="ide-tabs"><span class="on">invoice_agent.py</span><span>test_invoice_agent.py</span></div>
+        <div class="ai-badge" id="aiBadge"><i></i><span id="aiState">Meshon AI · pairing</span></div>
+      </div>
+      <div class="ide-body">
+        <div class="code" id="codeArea">
+<div class="cline"><span class="com"># invoice_agent.py — automated invoice processing</span></div>
+<div class="cline"><span class="kw">from</span> meshon <span class="kw">import</span> Agent, guardrails</div>
+<div class="cline">&nbsp;</div>
+<div class="cline">agent = <span class="cls">Agent</span>(</div>
+<div class="cline">    name=<span class="str">"invoice-triage"</span>,</div>
+<div class="cline">    tools=[read_pdf, match_po, notify_team],</div>
+<div class="cline">    approvals=<span class="str">"human-in-the-loop"</span>,</div>
+<div class="cline">)</div>
+<div class="cline">&nbsp;</div>
+<div class="cline"><span class="dec">@agent.task</span>(<span class="str">"process invoice"</span>)</div>
+<div class="cline"><span class="kw">async def</span> <span class="fn">process</span>(invoice: <span class="cls">Invoice</span>) -&gt; <span class="cls">Result</span>:</div>
+<div class="cline">    data = <span class="kw">await</span> <span class="fn">read_pdf</span>(invoice.file)</div>
+<div class="cline">    order = <span class="kw">await</span> <span class="fn">match_po</span>(data.po_number)</div>
+<div class="cline">    <span class="kw">if</span> guardrails.<span class="fn">amount_ok</span>(order, data):</div>
+<div class="cline">        <span class="kw">await</span> <span class="fn">notify_team</span>(order, status=<span class="str">"approved"</span>)</div>
+<div class="cline">    <span class="kw">return</span> <span class="cls">Result</span>(order, data, score=data.confidence)</div>
+        </div>
+        <div class="term" id="termArea">
+<div class="tline"><span class="cmd">$ pytest tests/ -q</span></div>
+<div class="tline"><span class="ok">✓</span> test_read_pdf_extracts_fields</div>
+<div class="tline"><span class="ok">✓</span> test_po_match_fuzzy_lookup</div>
+<div class="tline"><span class="ok">✓</span> test_amount_guardrail_blocks_mismatch</div>
+<div class="tline"><span class="ok">✓</span> test_notify_team_sends_summary</div>
+<div class="tline"><span class="ok">✓</span> test_human_approval_required_above_limit</div>
+<div class="tline"><span class="ok">18 passed</span> <span class="dim">in 3.2s</span></div>
+<div class="tline">&nbsp;</div>
+<div class="tline"><span class="cmd">$ meshon deploy --prod</span></div>
+<div class="tline"><span class="ok">✓</span> Build succeeded&nbsp;&nbsp;<span class="ok">✓</span> Tests green&nbsp;&nbsp;<span class="ok">✓ Live</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ide-caption fade d3">
+      <span><b>Reviewed</b> by engineers</span>
+      <span><b>Approved</b> by you</span>
+      <span><b>Proven</b> by tests</span>
     </div>
   </div>
 </section>
@@ -318,6 +404,58 @@
     fades.forEach(function (el) { io.observe(el); });
   } else {
     fades.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  /* ---------- animated IDE showcase ---------- */
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var ide = document.getElementById("ide");
+  var codeLines = ide.querySelectorAll(".cline");
+  var termLines = ide.querySelectorAll(".tline");
+  var aiBadge = document.getElementById("aiBadge");
+  var aiState = document.getElementById("aiState");
+
+  function resetIde() {
+    codeLines.forEach(function (l) { l.classList.remove("on", "active"); });
+    termLines.forEach(function (l) { l.classList.remove("on"); });
+  }
+  function runIde() {
+    resetIde();
+    var i = 0;
+    aiState.textContent = "Meshon AI · writing code";
+    aiBadge.classList.add("working");
+    codeLines.forEach(function (l, idx) {
+      setTimeout(function () {
+        codeLines.forEach(function (p) { p.classList.remove("active"); });
+        l.classList.add("on", "active");
+      }, idx * 170);
+    });
+    setTimeout(function () {
+      codeLines.forEach(function (p) { p.classList.remove("active"); });
+      aiState.textContent = "Meshon AI · running tests";
+      var j = 0;
+      termLines.forEach(function (l, idx) {
+        setTimeout(function () {
+          l.classList.add("on");
+          if (idx === termLines.length - 1) {
+            aiState.textContent = "Meshon AI · deployed ✓";
+            aiBadge.classList.remove("working");
+            setTimeout(runIde, 5200);  // loop
+          }
+        }, idx * 300);
+      });
+    }, codeLines.length * 170 + 500);
+  }
+  if (reduced || !("IntersectionObserver" in window)) {
+    codeLines.forEach(function (l) { l.classList.add("on"); });
+    termLines.forEach(function (l) { l.classList.add("on"); });
+    aiState.textContent = "Meshon AI · deployed ✓";
+  } else {
+    var ideIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { ideIo.unobserve(e.target); runIde(); }
+      });
+    }, { threshold: 0.35 });
+    ideIo.observe(ide);
   }
 
   /* ---------- contact form ---------- */
