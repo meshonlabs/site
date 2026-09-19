@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meshon Labs — IT Services &amp; AI Engineering</title>
+<meta name="description" content="Meshon Labs is a full-stack IT services team — custom software, web platforms, integrations and applied AI. Java, Python, PHP and AI engineers, one team, end to end." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230A0E14'/%3E%3Ccircle cx='9' cy='11' r='3' fill='%2322D3EE'/%3E%3Ccircle cx='23' cy='9' r='2.4' fill='%236366F1'/%3E%3Ccircle cx='22' cy='23' r='3' fill='%2322D3EE'/%3E%3Ccircle cx='9' cy='22' r='2.2' fill='%236366F1'/%3E%3Cpath d='M11 12.5 20.8 9.8M11.5 13 20.5 22M11 21 19.5 12.5' stroke='%23475569' stroke-width='1.2'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #0A0E14;
+    --panel: #0F1522;
+    --card: #101827;
+    --line: rgba(255, 255, 255, 0.08);
+    --text: #E6E9EF;
+    --muted: #98A2B3;
+    --faint: #6B7280;
+    --cyan: #22D3EE;
+    --indigo: #818CF8;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: rgba(34, 211, 238, 0.25); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- reveal-on-scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .d1 { transition-delay: .08s; } .d2 { transition-delay: .16s; } .d3 { transition-delay: .24s; } .d4 { transition-delay: .32s; }
+
+  /* ---------- nav ---------- */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; transition: background .3s, border-color .3s, box-shadow .3s;
+        background: transparent; border-bottom: 1px solid transparent; }
+  nav.scrolled { background: rgba(10, 14, 20, 0.85); backdrop-filter: blur(12px); border-bottom-color: var(--line); box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 650; font-size: 15.5px; letter-spacing: .2px; }
+  .logo .word b { color: var(--cyan); font-weight: 650; }
+  .nav-right { display: flex; align-items: center; gap: 28px; }
+  .nav-links { display: flex; gap: 26px; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color .15s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { color: var(--cyan); text-decoration: none; font-size: 13.5px; font-weight: 600; border: 1px solid rgba(34,211,238,.35); padding: 8px 16px; border-radius: 8px; transition: background .15s; }
+  .nav-cta:hover { background: rgba(34,211,238,.1); }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* ---------- hero ---------- */
+  header { position: relative; padding: 168px 0 110px; text-align: center; overflow: hidden; }
+  #mesh { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .hero-fade { position: absolute; inset: 0; background:
+      radial-gradient(700px 340px at 50% -5%, rgba(99,102,241,.14), transparent 70%),
+      linear-gradient(to bottom, transparent 55%, var(--bg) 96%); pointer-events: none; }
+  .hero-in { position: relative; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--cyan);
+          border: 1px solid rgba(34,211,238,.3); border-radius: 999px; padding: 6px 15px; letter-spacing: .3px; background: rgba(34,211,238,.05); }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  h1 { font-size: clamp(38px, 6.2vw, 64px); line-height: 1.07; letter-spacing: -1.8px; font-weight: 750; margin-top: 28px; }
+  h1 .accent { color: var(--cyan); }
+  .sub { color: var(--muted); max-width: 660px; margin: 24px auto 0; font-size: 17.5px; }
+  .cta { margin-top: 40px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn { padding: 13px 26px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; transition: transform .15s, box-shadow .15s, background .15s, border-color .15s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--cyan); color: #06121A; box-shadow: 0 0 0 0 rgba(34,211,238,.35); }
+  .btn-primary:hover { box-shadow: 0 8px 30px rgba(34,211,238,.25); }
+  .btn-ghost { border: 1px solid var(--line); color: var(--text); background: rgba(255,255,255,.02); }
+  .btn-ghost:hover { border-color: rgba(255,255,255,.2); }
+  .hero-note { margin-top: 34px; font-family: var(--mono); font-size: 12.5px; color: var(--faint); }
+
+  /* ---------- capabilities marquee ---------- */
+  .caps { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 18px 0; overflow: hidden;
+          -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+  .caps-track { display: flex; gap: 44px; width: max-content; animation: slide 34s linear infinite; }
+  .caps:hover .caps-track { animation-play-state: paused; }
+  .caps span { font-family: var(--mono); font-size: 13px; color: var(--faint); white-space: nowrap; }
+  .caps span i { font-style: normal; color: rgba(34,211,238,.55); margin-right: 8px; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* ---------- sections ---------- */
+  section { padding: 92px 0; }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--cyan); }
+  h2 { font-size: clamp(26px, 3.4vw, 34px); letter-spacing: -.7px; margin: 12px 0 14px; font-weight: 700; }
+  .lead { color: var(--muted); max-width: 660px; font-size: 16.5px; }
+
+  /* ---------- services ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 48px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 26px; position: relative;
+          transition: transform .2s cubic-bezier(.16,1,.3,1), border-color .2s; }
+  .card:hover { transform: translateY(-3px); border-color: rgba(34,211,238,.35); }
+  .card .ic { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; margin-bottom: 18px;
+              background: rgba(34,211,238,.07); border: 1px solid rgba(34,211,238,.18); color: var(--cyan); }
+  .card .ic svg { width: 19px; height: 19px; }
+  .card h3 { font-size: 16px; font-weight: 650; margin-bottom: 8px; letter-spacing: -.2px; }
+  .card p { color: var(--muted); font-size: 14.2px; }
+  .card p b { color: var(--text); font-weight: 600; }
+  .card .tag { position: absolute; top: 22px; right: 22px; font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: 1px; }
+
+  /* ---------- builds strip ---------- */
+  .builds { margin-top: 54px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); overflow: hidden; }
+  .builds-head { padding: 20px 26px; border-bottom: 1px solid var(--line); font-size: 14.5px; color: var(--muted); }
+  .builds-head b { color: var(--text); font-weight: 650; }
+  .builds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .build { padding: 20px 26px; border-top: 1px solid var(--line-soft, rgba(255,255,255,.04)); border-left: 1px solid rgba(255,255,255,.04); }
+  .build h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .build p { color: var(--faint); font-size: 13px; }
+
+  /* ---------- engagement ---------- */
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 48px; }
+  .plan { border: 1px solid var(--line); border-radius: 14px; padding: 28px 26px; background: var(--card);
+          transition: transform .2s cubic-bezier(.16,1,.3,1), border-color .2s; display: flex; flex-direction: column; }
+  .plan:hover { transform: translateY(-3px); border-color: rgba(34,211,238,.35); }
+  .plan h3 { font-size: 17px; font-weight: 650; margin: 14px 0 6px; }
+  .plan .for { font-family: var(--mono); font-size: 11.5px; color: var(--cyan); letter-spacing: 1.4px; text-transform: uppercase; }
+  .plan p { color: var(--muted); font-size: 14.2px; flex: 1; }
+
+  /* ---------- process ---------- */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0; margin-top: 48px; border-top: 1px solid var(--line); }
+  .step { padding: 28px 22px 8px; border-left: 1px solid var(--line); }
+  .step:first-child { border-left: none; }
+  @media (max-width: 860px) { .step { border-left: none; border-top: 1px solid var(--line); } .steps { border-top: none; } }
+  .step .num { font-family: var(--mono); font-size: 12px; color: var(--cyan); letter-spacing: 1.5px; }
+  .step h3 { font-size: 15.5px; font-weight: 650; margin: 12px 0 6px; }
+  .step p { color: var(--muted); font-size: 13.8px; }
+
+  /* ---------- why ---------- */
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; margin-top: 48px; }
+  .why { border: 1px solid var(--line); border-radius: 14px; padding: 24px; background: var(--panel); transition: border-color .2s; }
+  .why:hover { border-color: rgba(34,211,238,.3); }
+  .why h3 { font-size: 15.5px; font-weight: 650; margin-bottom: 8px; }
+  .why p { color: var(--muted); font-size: 14px; }
+
+  /* ---------- team ---------- */
+  .team { border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(180deg, var(--panel), var(--bg)); padding: 44px 40px; }
+  .team-inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+  @media (max-width: 820px) { .team-inner { grid-template-columns: 1fr; } }
+  .team h3 { font-size: clamp(20px, 2.6vw, 26px); letter-spacing: -.4px; font-weight: 700; margin: 10px 0 12px; }
+  .team p { color: var(--muted); font-size: 15px; }
+  .stack { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .chip { font-family: var(--mono); font-size: 12.5px; color: var(--text); border: 1px solid var(--line); background: var(--card);
+          padding: 8px 16px; border-radius: 999px; }
+  .chip i { font-style: normal; color: var(--cyan); margin-right: 7px; }
+
+  /* ---------- contact ---------- */
+  .contact { text-align: center; padding-bottom: 110px; }
+  .contact .rule { width: 56px; height: 2px; background: var(--cyan); margin: 0 auto 28px; border-radius: 2px; }
+  .contact .big { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; letter-spacing: -.6px; }
+  .contact .lead { margin: 14px auto 0; }
+  .contact .mail { display: inline-block; margin-top: 30px; font-size: 17px; color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(34,211,238,.3); padding-bottom: 3px; transition: border-color .15s; }
+  .contact .mail:hover { border-color: var(--cyan); }
+  .socials { margin-top: 34px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .socials a { border: 1px solid var(--line); color: var(--muted); text-decoration: none; font-size: 13.5px;
+               padding: 9px 20px; border-radius: 999px; transition: color .15s, border-color .15s, transform .15s; }
+  .socials a:hover { color: var(--text); border-color: rgba(34,211,238,.4); transform: translateY(-1px); }
+
+  /* ---------- contact form ---------- */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; align-items: start; margin-top: 54px; text-align: left; }
+  @media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
+  .contact-info .big { font-size: clamp(24px, 3vw, 30px); font-weight: 700; letter-spacing: -.5px; margin-bottom: 12px; }
+  .contact-info .lead { margin-bottom: 24px; }
+  .contact-info .mail { font-size: 16.5px; color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(34,211,238,.3); padding-bottom: 3px; transition: border-color .15s; }
+  .contact-info .mail:hover { border-color: var(--cyan); }
+  .contact-info .socials { margin-top: 28px; justify-content: flex-start; }
+  .form-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 30px; }
+  .form-card h3 { font-size: 16px; font-weight: 650; margin-bottom: 20px; }
+  .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .frow { grid-template-columns: 1fr; } }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; letter-spacing: .2px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--panel); border: 1px solid var(--line); color: var(--text);
+    border-radius: 9px; padding: 11px 13px; font-size: 14px; font-family: inherit; outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field textarea { resize: vertical; min-height: 96px; }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: rgba(34,211,238,.55); box-shadow: 0 0 0 3px rgba(34,211,238,.12);
+  }
+  .field select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+  .hp { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
+  .form-card .btn { width: 100%; margin-top: 6px; cursor: pointer; border: none; font-family: inherit; }
+  .form-card .btn[disabled] { opacity: .6; cursor: wait; transform: none; }
+  .form-status { display: none; margin-top: 14px; font-size: 13.5px; border-radius: 9px; padding: 11px 14px; }
+  .form-status.ok { display: block; background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.3); color: #6EE7B7; }
+  .form-status.err { display: block; background: rgba(248,113,113,.08); border: 1px solid rgba(248,113,113,.3); color: #FCA5A5; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--faint); font-size: 13px; }
+  footer .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  footer .f-brand { display: flex; align-items: center; gap: 8px; }
+  footer .f-brand svg { opacity: .8; }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .caps-track { animation: none; }
+    .pill .dot { animation: none; }
+    * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#" aria-label="Meshon Labs home">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#0F1522" stroke="rgba(255,255,255,.1)"/>
+        <path d="M11 12.5 20.8 9.8M11.5 13 20.5 22M11 21 19.5 12.5" stroke="#475569" stroke-width="1.2"/>
+        <circle cx="9" cy="11" r="3" fill="#22D3EE"/><circle cx="23" cy="9" r="2.4" fill="#818CF8"/>
+        <circle cx="22" cy="23" r="3" fill="#22D3EE"/><circle cx="9" cy="22" r="2.2" fill="#818CF8"/>
+      </svg>
+      <span class="word">Meshon<b>Labs</b></span>
+    </a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#engagement">Engagement</a>
+        <a href="#why">Why us</a>
+      </div>
+      <a class="nav-cta" href="#contact">Start a project</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <canvas id="mesh" aria-hidden="true"></canvas>
+  <div class="hero-fade" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <div class="pill reveal in"><span class="dot"></span>IT services · Web · AI automation</div>
+    <h1 class="reveal in d1">Software, built properly.<br/><span class="accent">AI, wired in.</span></h1>
+    <p class="sub reveal in d2">Meshon Labs is a full-stack IT services team. We design, build and maintain the software your business runs on — web platforms, custom systems, integrations and applied AI — from first idea to launch and beyond.</p>
+    <div class="cta reveal in d3">
+      <a class="btn btn-primary" href="mailto:hello@meshonlabs.in">Start a project</a>
+      <a class="btn btn-ghost" href="#services">What we build</a>
+    </div>
+    <div class="hero-note reveal in d4">Response within 24 hours · Project-based or dedicated team</div>
+  </div>
+</header>
+
+<div class="caps" aria-hidden="true">
+  <div class="caps-track" id="capsTrack">
+    <span><i>—</i>Java</span><span><i>—</i>Python</span><span><i>—</i>PHP</span><span><i>—</i>JavaScript</span>
+    <span><i>—</i>AI agents</span><span><i>—</i>Workflow automation</span><span><i>—</i>REST APIs</span>
+    <span><i>—</i>Databases</span><span><i>—</i>Cloud deployment</span><span><i>—</i>RAG systems</span>
+  </div>
+</div>
+
+<section id="services">
+  <div class="wrap">
+    <div class="kicker reveal">Services</div>
+    <h2 class="reveal d1">One team for everything your business needs.</h2>
+    <p class="lead reveal d2">No handoffs between three different vendors. We cover the full stack — and we explain every decision in plain language.</p>
+    <div class="grid">
+      <div class="card reveal">
+        <span class="tag">01</span>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6 3 12l5 6M16 6l5 6-5 6M13.5 4l-3 16"/></svg></div>
+        <h3>Custom Software Development</h3>
+        <p><b>What it means:</b> software made for your exact process — internal tools, portals, billing systems — in Java, Python or PHP. Not a forced off-the-shelf product.</p>
+      </div>
+      <div class="card reveal d1">
+        <span class="tag">02</span>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 13h6"/><path d="M9 20h6"/></svg></div>
+        <h3>Web Platforms &amp; Websites</h3>
+        <p><b>What it means:</b> fast, modern websites and web apps — company sites, customer dashboards, booking or e-commerce systems — that work on every device.</p>
+      </div>
+      <div class="card reveal d2">
+        <span class="tag">03</span>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.5 5.5 7.5 7.5M16.5 16.5l2 2M18.5 5.5l-2 2M7.5 16.5l-2 2"/></svg></div>
+        <h3>AI &amp; Intelligent Automation</h3>
+        <p><b>What it means:</b> AI that does real work — chatbots that answer customers, systems that read your documents, agents that handle repetitive tasks with your approval.</p>
+      </div>
+      <div class="card reveal d3">
+        <span class="tag">04</span>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"/><path d="M4 7h16l-1.5 5a4 4 0 0 1-4 3h-5a4 4 0 0 1-4-3L4 7z"/><path d="M12 15v6M8 21h8"/></svg></div>
+        <h3>Integrations &amp; APIs</h3>
+        <p><b>What it means:</b> making your tools talk to each other — payment gateways, WhatsApp, CRMs, your existing software — so data flows automatically instead of by copy-paste.</p>
+      </div>
+      <div class="card reveal">
+        <span class="tag">05</span>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+        <h3>Data &amp; Reporting</h3>
+        <p><b>What it means:</b> your numbers in one place — dashboards and reports that update themselves, so decisions come from data instead of guesswork.</p>
+      </div>
+      <div class="card reveal d1">
+        <span class="tag">06</span>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Maintenance &amp; Support</h3>
+        <p><b>What it means:</b> we stay after launch — updates, fixes, monitoring and small improvements — so your software keeps working as your business grows.</p>
+      </div>
+    </div>
+
+    <div class="builds reveal">
+      <div class="builds-head"><b>Popular builds</b> — real things we deliver, in plain words</div>
+      <div class="builds-grid">
+        <div class="build"><h4>Customer-support chatbot</h4><p>Answers common questions on your site 24/7, hands complex cases to your team.</p></div>
+        <div class="build"><h4>Document assistant</h4><p>Ask questions about your contracts, manuals or reports — get answers with sources.</p></div>
+        <div class="build"><h4>Business dashboard</h4><p>Sales, inventory and team numbers in one live view, no spreadsheet juggling.</p></div>
+        <div class="build"><h4>Booking / ordering system</h4><p>Customers book, order and pay online; you get a clean admin panel behind it.</p></div>
+        <div class="build"><h4>Lead-follow-up automation</h4><p>New enquiries get instant responses and your sales team gets tidy summaries.</p></div>
+        <div class="build"><h4>Legacy system modernization</h4><p>Old, slow software rebuilt piece by piece — without stopping your business.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="engagement" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="kicker reveal">Engagement models</div>
+    <h2 class="reveal d1">Work with us the way that fits.</h2>
+    <p class="lead reveal d2">Every business is at a different stage. Pick the model that matches — and switch as you grow.</p>
+    <div class="plans">
+      <div class="plan reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;color:var(--cyan)"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+        <h3>Fixed-scope project</h3>
+        <p>A defined system with a clear deadline — a website, a portal, a chatbot. We agree on scope and price upfront, deliver, and hand over everything.</p>
+      </div>
+      <div class="plan reveal d1">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;color:var(--cyan)"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M15.5 14.7c2.8.2 5.3 1.9 6 5.3"/></svg></div>
+        <h3>Dedicated team</h3>
+        <p>Engineers from our team work only on your product, month after month — like hiring your own developers, without the hiring process.</p>
+      </div>
+      <div class="plan reveal d2">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;color:var(--cyan)"><path d="M21 12a9 9 0 1 1-2.6-6.3"/><path d="M21 3v6h-6"/></svg></div>
+        <h3>Care &amp; support plan</h3>
+        <p>For software that's already live — we monitor, maintain and keep improving it on a simple monthly plan, so you never worry about it breaking.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="kicker reveal">How we work</div>
+    <h2 class="reveal d1">A process you can plan around.</h2>
+    <div class="steps">
+      <div class="step reveal"><div class="num">01</div><h3>Discover</h3><p>A free call to understand your business, your process and what "done" looks like — in your language, not jargon.</p></div>
+      <div class="step reveal d1"><div class="num">02</div><h3>Plan &amp; price</h3><p>A written scope with fixed timeline and cost. You approve before anything starts. No surprises later.</p></div>
+      <div class="step reveal d2"><div class="num">03</div><h3>Build &amp; review</h3><p>You see working progress in a live environment every week — not slides, not promises.</p></div>
+      <div class="step reveal d3"><div class="num">04</div><h3>Launch &amp; support</h3><p>We deploy, train your team, document everything, and stay available for support. You own the code.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="why" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="kicker reveal">Why Meshon Labs</div>
+    <h2 class="reveal d1">Small enough to care. Complete enough to deliver.</h2>
+    <div class="why-grid">
+      <div class="why reveal"><h3>A team, not a freelancer</h3><p>Engineers across Java, Python, PHP and AI. When your project needs two specialties at once, they're already in the same room.</p></div>
+      <div class="why reveal d1"><h3>Engineering discipline</h3><p>Version control, code reviews, testing and documentation on every project — the practices big companies use, applied to yours.</p></div>
+      <div class="why reveal d2"><h3>You own everything</h3><p>Code, credentials, documentation and deployments are handed over to you. No hostage situations, no black boxes.</p></div>
+      <div class="why reveal d3"><h3>AI-accelerated delivery</h3><p>We use modern AI tooling inside our own process, which means faster delivery and lower cost — passed on to you.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="team" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="team reveal">
+      <div class="team-inner">
+        <div>
+          <div class="kicker">The team</div>
+          <h3>Engineers from different worlds, one bench.</h3>
+          <p>Meshon Labs is built by engineers who spent years in different domains — enterprise Java backends, Python automation, PHP web platforms and applied AI. We joined forces because clients kept needing all of them at the same time. That's the bench you get on day one.</p>
+        </div>
+        <div class="stack">
+          <span class="chip"><i>—</i>Java · Spring</span>
+          <span class="chip"><i>—</i>Python · FastAPI</span>
+          <span class="chip"><i>—</i>PHP · Laravel</span>
+          <span class="chip"><i>—</i>JavaScript · React</span>
+          <span class="chip"><i>—</i>AI · LLMs &amp; agents</span>
+          <span class="chip"><i>—</i>SQL · Databases</span>
+          <span class="chip"><i>—</i>Cloud · CI/CD</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact" style="padding-top: 20px;">
+  <div class="wrap">
+    <div style="text-align:center;"><div class="rule reveal"></div></div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="big reveal d1">Tell us what your business needs.</div>
+        <p class="lead reveal d2">The first call is free, the advice is honest — even when the answer is "you don't need custom software for this."</p>
+        <a class="mail reveal d3" href="mailto:hello@meshonlabs.in">hello@meshonlabs.in</a>
+        <div class="socials reveal d4">
+          <a href="https://github.com/meshonlabs" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.linkedin.com/company/meshon-labs" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://x.com/meshonlabs" target="_blank" rel="noopener">X / Twitter</a>
+        </div>
+      </div>
+      <form class="form-card reveal d2" id="contactForm" novalidate>
+        <h3>Start a conversation</h3>
+        <div class="frow">
+          <div class="field"><label for="cf-name">Your name</label><input id="cf-name" name="name" type="text" required autocomplete="name" placeholder="Full name" /></div>
+          <div class="field"><label for="cf-email">Email</label><input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" /></div>
+        </div>
+        <div class="frow">
+          <div class="field"><label for="cf-phone">Phone / WhatsApp <span style="color:var(--faint)">(optional)</span></label><input id="cf-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 ..." /></div>
+          <div class="field"><label for="cf-budget">Budget <span style="color:var(--faint)">(optional)</span></label>
+            <select id="cf-budget" name="budget">
+              <option value="">Select a range</option>
+              <option>Under ₹50,000</option>
+              <option>₹50,000 – ₹2,00,000</option>
+              <option>₹2,00,000+</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="cf-msg">What do you need?</label><textarea id="cf-msg" name="message" required placeholder="A few lines about your business and what you want to build or automate..."></textarea></div>
+        <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button class="btn btn-primary" type="submit" id="cf-submit">Send message</button>
+        <div class="form-status" id="cf-status" role="status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="f-brand">
+      <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#0F1522" stroke="rgba(255,255,255,.1)"/>
+        <circle cx="9" cy="11" r="3" fill="#22D3EE"/><circle cx="23" cy="9" r="2.4" fill="#818CF8"/>
+        <circle cx="22" cy="23" r="3" fill="#22D3EE"/><circle cx="9" cy="22" r="2.2" fill="#818CF8"/>
+      </svg>
+      <span>© 2026 Meshon Labs</span>
+    </div>
+    <span>meshonlabs.in · Software, built properly. AI, wired in.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- nav scroll state ---------- */
+  var nav = document.getElementById("nav");
+  function onScroll() { nav.classList.toggle("scrolled", window.scrollY > 24); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- animated mesh background ---------- */
+  var canvas = document.getElementById("mesh");
+  var ctx = canvas.getContext("2d");
+  var nodes = [], raf = null, W = 0, H = 0, dpr = 1;
+  var COLORS = ["34,211,238", "129,140,248"];
+
+  function sizeCanvas() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function seedNodes() {
+    var n = Math.max(28, Math.min(64, Math.round((W * H) / 26000)));
+    nodes = [];
+    for (var i = 0; i < n; i++) {
+      nodes.push({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28,
+        r: 1.2 + Math.random() * 1.8,
+        c: COLORS[i % 2], a: 0.35 + Math.random() * 0.35
+      });
+    }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    var i, j, dx, dy, d, LINK = 150;
+    for (i = 0; i < nodes.length; i++) {
+      var p = nodes[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
+      if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
+    }
+    ctx.lineWidth = 1;
+    for (i = 0; i < nodes.length; i++) {
+      for (j = i + 1; j < nodes.length; j++) {
+        dx = nodes[i].x - nodes[j].x; dy = nodes[i].y - nodes[j].y;
+        d = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK) {
+          ctx.strokeStyle = "rgba(148,163,184," + (0.10 * (1 - d / LINK)).toFixed(3) + ")";
+          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+        }
+      }
+    }
+    for (i = 0; i < nodes.length; i++) {
+      var q = nodes[i];
+      ctx.fillStyle = "rgba(" + q.c + "," + q.a + ")";
+      ctx.beginPath(); ctx.arc(q.x, q.y, q.r, 0, Math.PI * 2); ctx.fill();
+    }
+    raf = requestAnimationFrame(draw);
+  }
+  function startMesh() {
+    sizeCanvas(); seedNodes();
+    if (reduced) { draw(); cancelAnimationFrame(raf); return; }  // one static frame
+    raf = requestAnimationFrame(draw);
+  }
+  var rt;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt); rt = setTimeout(function () { sizeCanvas(); seedNodes(); }, 180);
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) { cancelAnimationFrame(raf); raf = null; }
+    else if (raf === null && !reduced) { raf = requestAnimationFrame(draw); }
+  });
+  startMesh();
+
+  /* ---------- scroll reveals ---------- */
+  var revealEls = document.querySelectorAll(".reveal");
+  if (!reduced && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  /* ---------- contact form ---------- */
+  /* Paste your Formspree or Web3Forms endpoint here after creating a free
+     account (e.g. "https://formspree.io/f/abcdwxyz" or
+     "https://api.web3forms.com/submit"). While empty, the form opens the
+     visitor's mail app with everything pre-filled instead. */
+  var CONTACT_ENDPOINT = "";
+  /* Only needed for Web3Forms (it requires an access key from your dashboard).
+     Formspree needs no key — the form field names are enough. */
+  var CONTACT_ACCESS_KEY = "";
+
+  var form = document.getElementById("contactForm");
+  var statusEl = document.getElementById("cf-status");
+  var submitBtn = document.getElementById("cf-submit");
+
+  function showStatus(cls, msg) {
+    statusEl.className = "form-status " + cls;
+    statusEl.textContent = msg;
+  }
+
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var data = new FormData(form);
+    var name = (data.get("name") || "").toString().trim();
+    var email = (data.get("email") || "").toString().trim();
+    var message = (data.get("message") || "").toString().trim();
+    if (!name || !email || !message) { showStatus("err", "Please fill in your name, email and message."); return; }
+
+    if (!CONTACT_ENDPOINT) {
+      var body = "Name: " + name + "\nEmail: " + email +
+        "\nPhone: " + (data.get("phone") || "-") +
+        "\nBudget: " + (data.get("budget") || "-") +
+        "\n\n" + message;
+      window.location.href = "mailto:hello@meshonlabs.in" +
+        "?subject=" + encodeURIComponent("Project enquiry from " + name) +
+        "&body=" + encodeURIComponent(body);
+      showStatus("ok", "Opening your email app — press send and we will reply within 24 hours.");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+    if (CONTACT_ENDPOINT.indexOf("web3forms") !== -1 && CONTACT_ACCESS_KEY) data.append("access_key", CONTACT_ACCESS_KEY);
+    data.append("_replyto", email);
+    fetch(CONTACT_ENDPOINT, { method: "POST", body: data, headers: { Accept: "application/json" } })
+      .then(function (res) {
+        if (res.ok) { form.reset(); showStatus("ok", "Thank you — your message is on its way. We reply within 24 hours."); }
+        else { showStatus("err", "Something went wrong. Please email us directly at hello@meshonlabs.in."); }
+      })
+      .catch(function () { showStatus("err", "Network error — please email us directly at hello@meshonlabs.in."); })
+      .finally(function () { submitBtn.disabled = false; submitBtn.textContent = "Send message"; });
+  });
+
+  /* ---------- duplicate marquee content for seamless loop ---------- */
+  var track = document.getElementById("capsTrack");
+  track.innerHTML += track.innerHTML;
+})();
+</script>
+
+</body>
+</html>
