@@ -25,6 +25,7 @@
     background: var(--bg); color: var(--ink);
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
     line-height: 1.65;
+    overflow-x: hidden;
   }
   .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
 
@@ -33,45 +34,127 @@
   .fade.in { opacity: 1; transform: none; }
   .d1 { transition-delay: .08s; } .d2 { transition-delay: .16s; } .d3 { transition-delay: .24s; }
 
-  /* ---------- nav ---------- */
-  nav { position: sticky; top: 0; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
-  .nav-in { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); font-weight: 700; font-size: 15.5px; }
-  .logo .word b { color: var(--blue); font-weight: 700; }
-  .nav-right { display: flex; align-items: center; gap: 26px; }
-  .nav-links { display: flex; gap: 24px; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; }
-  .nav-links a:hover { color: var(--navy); }
-  .nav-cta { color: #fff; background: var(--navy); text-decoration: none; font-size: 13.5px; font-weight: 600; padding: 9px 18px; border-radius: 8px; }
-  .nav-cta:hover { background: #0a4a9e; }
-  @media (max-width: 680px) { .nav-links { display: none; } }
+  /* =========================================================
+     3D foundation
+     ========================================================= */
+  .scene-3d { perspective: 1400px; perspective-origin: 50% 20%; }
+  .tilt-wrap { perspective: 900px; }
+  .tilt { transform-style: preserve-3d; transition: transform .18s ease-out, box-shadow .18s ease-out; will-change: transform; }
+  .tilt .sheen {
+    position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(0,210,255,.13), transparent 62%);
+    opacity: 0; transition: opacity .2s ease;
+  }
+  .tilt:hover .sheen { opacity: 1; }
+  .tilt .layer { transform: translateZ(26px); }
 
-  /* ---------- hero ---------- */
-  header { padding: 100px 0 84px; }
+  /* =========================================================
+     Hero — 3D floor + floating chips
+     ========================================================= */
+  header { padding: 92px 0 40px; position: relative; overflow: visible; }
   .pill { display: inline-block; font-family: var(--mono); font-size: 12px; color: var(--blue);
           border: 1px solid #cfe7f3; background: #F0F9FD; border-radius: 999px; padding: 5px 14px; }
   h1 { font-size: clamp(38px, 6vw, 60px); line-height: 1.1; letter-spacing: -1.4px; font-weight: 750; color: var(--navy); margin-top: 24px; }
   h1 .accent { color: var(--blue); }
   .sub { color: var(--muted); max-width: 620px; margin-top: 20px; font-size: 17.5px; }
   .cta { margin-top: 32px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-  .btn { padding: 13px 26px; border-radius: 9px; font-weight: 600; font-size: 15px; text-decoration: none; }
-  .btn-primary { background: var(--navy); color: #fff; }
-  .btn-primary:hover { background: #0a4a9e; }
-  .arrow-link { color: var(--blue); text-decoration: none; font-weight: 600; font-size: 15px; }
-  .arrow-link:hover { text-decoration: underline; }
   .hero-note { margin-top: 26px; font-family: var(--mono); font-size: 12.5px; color: var(--soft); }
 
-  /* ---------- sections ---------- */
-  section { padding: 78px 0; }
-  section.alt { background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); }
-  h2 { font-size: clamp(25px, 3.2vw, 33px); letter-spacing: -.5px; margin: 10px 0 12px; font-weight: 720; color: var(--navy); line-height: 1.25; }
-  .lead { color: var(--muted); max-width: 660px; font-size: 16px; }
+  .hero-stage {
+    position: relative; margin: 34px auto 0; max-width: 1120px; padding: 30px 24px 66px;
+    text-align: center;
+  }
+  .hero-floor {
+    position: absolute; left: 50%; bottom: 0; width: 1800px; height: 340px;
+    transform: translateX(-50%) rotateX(68deg) translateZ(-90px);
+    transform-style: preserve-3d;
+    background:
+      linear-gradient(rgba(13,146,198,.13) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, rgba(13,146,198,.13) 1.5px, transparent 1.5px);
+    background-size: 56px 56px;
+    border-radius: 24px;
+    -webkit-mask-image: radial-gradient(ellipse 58% 62% at 50% 38%, #000 30%, transparent 74%);
+            mask-image: radial-gradient(ellipse 58% 62% at 50% 38%, #000 30%, transparent 74%);
+    pointer-events: none;
+  }
+  .hero-floor::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 46% 50% at 50% 40%, rgba(0,210,255,.10), transparent 70%);
+  }
+  .chip-float {
+    position: absolute; z-index: 3; pointer-events: none;
+    font-family: var(--mono); font-size: 12px; color: var(--navy);
+    background: rgba(255,255,255,.92); border: 1px solid var(--line); border-radius: 10px;
+    padding: 8px 13px; box-shadow: 0 14px 30px rgba(5,52,118,.12);
+    backdrop-filter: blur(4px);
+    animation: chipFloat 5.6s ease-in-out infinite;
+  }
+  .chip-float b { color: var(--blue); font-weight: 650; }
+  @keyframes chipFloat { 0%,100% { transform: translateZ(70px) translateY(0); } 50% { transform: translateZ(90px) translateY(-11px); } }
+  .chip-1 { top: 4%; left: 2%; animation-delay: 0s; }
+  .chip-2 { top: 12%; right: 1%; animation-delay: .7s; }
+  .chip-3 { bottom: 20%; left: 5%; animation-delay: 1.4s; }
+  .chip-4 { bottom: 26%; right: 4%; animation-delay: 2.1s; }
+  @media (max-width: 760px) { .chip-float { display: none; } }
 
-  /* ---------- showcase (animated IDE) ---------- */
-  .showcase { text-align: center; }
-  .ide { max-width: 860px; margin: 44px auto 0; background: #0D1522; border: 1px solid #16243A; border-radius: 14px;
-         box-shadow: 0 24px 60px rgba(5,52,118,.16); overflow: hidden; text-align: left; }
+  /* =========================================================
+     Laptop scene (pure CSS 3D)
+     ========================================================= */
+  .laptop-scene { position: relative; z-index: 2; perspective: 1900px; perspective-origin: 50% 8%; }
+  .laptop {
+    position: relative; max-width: 900px; margin: 0 auto;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx, 16deg)) rotateZ(var(--rz, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform .9s cubic-bezier(.2,.8,.2,1);
+    will-change: transform;
+  }
+  .laptop.in-view { --rx: 8deg; }
+  .lid {
+    position: relative; border-radius: 22px; background: linear-gradient(160deg, #182133, #0E1725 55%);
+    padding: 13px; transform: translateZ(0);
+    box-shadow: 0 50px 110px rgba(5,52,118,.30), 0 12px 34px rgba(5,52,118,.18),
+                inset 0 1px 0 rgba(255,255,255,.14), inset 0 0 0 2px rgba(255,255,255,.03);
+  }
+  .lid::before { /* camera dot */
+    content: ""; position: absolute; top: 6px; left: 50%; width: 5px; height: 5px; border-radius: 50%;
+    background: #22314b; transform: translateX(-50%);
+    box-shadow: 0 0 4px rgba(0,210,255,.5);
+  }
+  .screen { border-radius: 13px; overflow: hidden; transform-style: preserve-3d; }
+  .glare {
+    position: absolute; inset: 13px; border-radius: 13px; pointer-events: none; z-index: 4;
+    background: linear-gradient(115deg, rgba(255,255,255,.075) 0%, rgba(255,255,255,0) 32%);
+    mix-blend-mode: screen;
+  }
+  .deck {
+    position: relative; height: 60px; margin: 0 auto; max-width: 1010px; width: 113%;
+    left: 50%; transform: translateX(-50%) rotateX(-76deg) translateZ(-8px);
+    transform-origin: top center;
+    background: linear-gradient(180deg, #D8E2EF, #B9C7DB 62%, #9FB0C8);
+    border-radius: 8px 8px 18px 18px;
+    box-shadow: 0 22px 40px rgba(5,52,118,.20);
+  }
+  .deck::before { /* keyboard texture */
+    content: ""; position: absolute; inset: 9px 16% 12px; border-radius: 6px;
+    background:
+      repeating-linear-gradient(90deg, rgba(11,27,51,.16) 0 30px, transparent 30px 33px),
+      repeating-linear-gradient(0deg, rgba(11,27,51,.14) 0 7px, transparent 7px 10px);
+    opacity: .5;
+  }
+  .deck::after { /* trackpad */
+    content: ""; position: absolute; left: 50%; bottom: 4px; width: 130px; height: 8px;
+    transform: translateX(-50%); border-radius: 4px; background: rgba(11,27,51,.12);
+  }
+  .ground-shadow {
+    position: absolute; left: 50%; bottom: -44px; width: 74%; height: 46px;
+    transform: translateX(-50%) rotateX(72deg);
+    background: radial-gradient(ellipse at center, rgba(5,52,118,.22), transparent 68%);
+    pointer-events: none;
+  }
+
+  /* ---------- IDE (inside laptop screen) ---------- */
+  .ide { background: #0D1522; border: 1px solid #16243A; border-radius: 13px;
+         overflow: hidden; text-align: left; }
   .ide-bar { display: flex; align-items: center; gap: 14px; padding: 11px 16px; background: #0A1019; border-bottom: 1px solid #16243A; }
   .lights { display: flex; gap: 7px; }
   .lights i { width: 11px; height: 11px; border-radius: 50%; }
@@ -99,30 +182,59 @@
   .tline { opacity: 0; transform: translateY(4px); transition: opacity .16s ease, transform .16s ease; white-space: pre-wrap; }
   .tline.on { opacity: 1; transform: none; }
   .tline .ok { color: #4ADE80; } .tline .cmd { color: #E2E8F0; } .tline .dim { color: #5B6B84; }
-  .ide-caption { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; margin-top: 18px; font-family: var(--mono); font-size: 12px; color: var(--soft); }
+  .ide-caption { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; margin-top: 30px; font-family: var(--mono); font-size: 12px; color: var(--soft); }
   .ide-caption span b { color: var(--navy); font-weight: 650; }
 
-  /* ---------- services ---------- */
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 38px; }
-  .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 24px; transition: border-color .15s, box-shadow .15s; }
-  .card:hover { border-color: #bfe0f0; box-shadow: 0 6px 20px rgba(5,52,118,.07); }
+  /* ---------- sections ---------- */
+  section { padding: 78px 0; }
+  section.alt { background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); }
+  h2 { font-size: clamp(25px, 3.2vw, 33px); letter-spacing: -.5px; margin: 10px 0 12px; font-weight: 720; color: var(--navy); line-height: 1.25; }
+  .lead { color: var(--muted); max-width: 660px; font-size: 16px; }
+
+  /* ---------- 3D cards ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 38px; }
+  .card { position: relative; background: linear-gradient(180deg, #ffffff, #FBFDFF); border: 1px solid var(--line); border-radius: 12px; padding: 24px;
+          box-shadow: 0 1px 0 rgba(5,52,118,.04); }
+  .card:hover { border-color: #bfe0f0; box-shadow: 0 18px 38px rgba(5,52,118,.10); }
   .card h3 { font-size: 16px; font-weight: 650; color: var(--navy); margin-bottom: 6px; }
   .card p { color: var(--muted); font-size: 14.2px; }
+  .card::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 3px; border-radius: 3px;
+                  background: linear-gradient(180deg, var(--cyan), var(--blue)); opacity: 0; transition: opacity .18s; }
+  .card:hover::before { opacity: 1; }
 
   /* ---------- engagement strip ---------- */
-  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 36px; }
-  .plan { border: 1px solid var(--line); border-radius: 12px; padding: 22px; background: #fff; }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 36px; }
+  .plan { position: relative; border: 1px solid var(--line); border-radius: 12px; padding: 22px; background: linear-gradient(180deg, #ffffff, #FBFDFF); }
+  .plan:hover { border-color: #bfe0f0; box-shadow: 0 18px 38px rgba(5,52,118,.10); }
   .plan .for { font-family: var(--mono); font-size: 11px; color: var(--blue); letter-spacing: 1.2px; text-transform: uppercase; }
   .plan h3 { font-size: 15.5px; font-weight: 650; color: var(--navy); margin: 8px 0 5px; }
   .plan p { color: var(--muted); font-size: 13.8px; }
 
   /* ---------- process ---------- */
   .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 26px; margin-top: 38px; }
-  .step .num { font-family: var(--mono); font-size: 12px; color: var(--blue); letter-spacing: 1px; }
-  .step h3 { font-size: 15.5px; font-weight: 650; color: var(--navy); margin: 8px 0 6px; }
+  .step { position: relative; }
+  .step .num { font-family: var(--mono); font-size: 12px; color: var(--blue); letter-spacing: 1px;
+               display: inline-block; background: #F0F9FD; border: 1px solid #cfe7f3; border-radius: 6px; padding: 2px 8px; }
+  .step h3 { font-size: 15.5px; font-weight: 650; color: var(--navy); margin: 10px 0 6px; }
   .step p { color: var(--muted); font-size: 13.8px; }
-  .banner { margin-top: 44px; background: var(--navy); color: #fff; border-radius: 14px; padding: 30px 34px; font-size: 17px; font-weight: 550; line-height: 1.5; }
+  .banner { margin-top: 44px; background: linear-gradient(135deg, var(--navy) 0%, #0a4a9e 100%); color: #fff; border-radius: 14px;
+            padding: 30px 34px; font-size: 17px; font-weight: 550; line-height: 1.5;
+            box-shadow: 0 24px 50px rgba(5,52,118,.25); position: relative; }
   .banner b { color: var(--cyan); font-weight: 650; }
+
+  /* ---------- buttons (press-3D) ---------- */
+  .btn { display: inline-block; padding: 13px 26px; border-radius: 9px; font-weight: 600; font-size: 15px; text-decoration: none;
+         transition: transform .1s ease, box-shadow .1s ease; }
+  .btn-primary { background: var(--navy); color: #fff; box-shadow: 0 4px 0 #04285a, 0 12px 24px rgba(5,52,118,.22); }
+  .btn-primary:hover { background: #0a4a9e; }
+  .btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 #04285a, 0 6px 14px rgba(5,52,118,.18); }
+  .arrow-link { color: var(--blue); text-decoration: none; font-weight: 600; font-size: 15px; }
+  .arrow-link:hover { text-decoration: underline; }
+  .nav-cta { color: #fff; background: var(--navy); text-decoration: none; font-size: 13.5px; font-weight: 600; padding: 9px 18px; border-radius: 8px;
+             box-shadow: 0 3px 0 #04285a; transition: transform .1s ease, box-shadow .1s ease, background .12s; }
+  .nav-cta:hover { background: #0a4a9e; }
+  .nav-cta:active { transform: translateY(2px); box-shadow: 0 1px 0 #04285a; }
 
   /* ---------- contact ---------- */
   .contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 44px; margin-top: 38px; }
@@ -176,6 +288,9 @@
     html { scroll-behavior: auto; }
     .fade { opacity: 1; transform: none; transition: none; }
     .modal { animation: none; }
+    .laptop { transform: none !important; transition: none; }
+    .chip-float { animation: none; }
+    .tilt { transition: none; }
   }
 </style>
 </head>
@@ -216,44 +331,27 @@
   </div>
 </header>
 
-<section id="about" class="alt">
-  <div class="wrap">
-    <div class="kicker fade">About</div>
-    <h2 class="fade d1">We come from different stacks, so we build the whole picture.</h2>
-    <p class="lead fade d2" style="max-width:760px;">Meshon Labs is a founder-led team of engineers from enterprise Java, Python automation, PHP web platforms and applied AI. We started the company together because clients kept needing all of those skills at the same time — so instead of coordinating three vendors, you get one bench that already works as a team.</p>
-    <div class="plans">
-      <div class="plan fade">
-        <div class="for">Fixed scope</div>
-        <h3>Project</h3>
-        <p>A defined system with a clear deadline — scope and price agreed upfront, everything handed over.</p>
-      </div>
-      <div class="plan fade d1">
-        <div class="for">Monthly</div>
-        <h3>Dedicated team</h3>
-        <p>Our engineers work only on your product, month after month — like your own team, without the hiring.</p>
-      </div>
-      <div class="plan fade d2">
-        <div class="for">Monthly</div>
-        <h3>Care &amp; support</h3>
-        <p>For live software — we monitor, maintain and keep improving it, so you never worry about it breaking.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- ============ HERO 3D STAGE: laptop + floor + floating chips ============ -->
+<div class="hero-stage scene-3d">
+  <div class="hero-floor" aria-hidden="true"></div>
+  <div class="chip-float chip-1" aria-hidden="true"><b>✓</b> tests green</div>
+  <div class="chip-float chip-2" aria-hidden="true"><b>&lt;/&gt;</b> clean handover</div>
+  <div class="chip-float chip-3" aria-hidden="true"><b>⚡</b> shipped weekly</div>
+  <div class="chip-float chip-4" aria-hidden="true"><b>✉</b> reply in 24h</div>
 
-<section id="showcase" class="showcase">
-  <div class="wrap">
-    <div class="kicker fade">How we build</div>
-    <h2 class="fade d1">Working software, while you watch.</h2>
-    <p class="lead fade d2" style="margin: 0 auto;">Our engineers pair with an AI agent that writes most of the code — every line reviewed, then proven with tests before anything reaches your business.</p>
-    <div class="ide fade d2" id="ide" aria-hidden="true">
-      <div class="ide-bar">
-        <div class="lights"><i></i><i></i><i></i></div>
-        <div class="ide-tabs"><span class="on">invoice_agent.py</span><span>test_invoice_agent.py</span></div>
-        <div class="ai-badge" id="aiBadge"><i></i><span id="aiState">Meshon AI · pairing</span></div>
-      </div>
-      <div class="ide-body">
-        <div class="code" id="codeArea">
+  <div class="laptop-scene" id="laptopScene">
+    <div class="laptop" id="laptop" aria-hidden="true">
+      <div class="lid">
+        <div class="glare"></div>
+        <div class="screen">
+          <div class="ide" id="ide" aria-hidden="true">
+            <div class="ide-bar">
+              <div class="lights"><i></i><i></i><i></i></div>
+              <div class="ide-tabs"><span class="on">invoice_agent.py</span><span>test_invoice_agent.py</span></div>
+              <div class="ai-badge" id="aiBadge"><i></i><span id="aiState">Meshon AI · pairing</span></div>
+            </div>
+            <div class="ide-body">
+              <div class="code" id="codeArea">
 <div class="cline"><span class="com"># invoice_agent.py — automated invoice processing</span></div>
 <div class="cline"><span class="kw">from</span> meshon <span class="kw">import</span> Agent, guardrails</div>
 <div class="cline">&nbsp;</div>
@@ -270,8 +368,8 @@
 <div class="cline">    <span class="kw">if</span> guardrails.<span class="fn">amount_ok</span>(order, data):</div>
 <div class="cline">        <span class="kw">await</span> <span class="fn">notify_team</span>(order, status=<span class="str">"approved"</span>)</div>
 <div class="cline">    <span class="kw">return</span> <span class="cls">Result</span>(order, data, score=data.confidence)</div>
-        </div>
-        <div class="term" id="termArea">
+              </div>
+              <div class="term" id="termArea">
 <div class="tline"><span class="cmd">$ pytest tests/ -q</span></div>
 <div class="tline"><span class="ok">✓</span> test_read_pdf_extracts_fields</div>
 <div class="tline"><span class="ok">✓</span> test_po_match_fuzzy_lookup</div>
@@ -282,13 +380,53 @@
 <div class="tline">&nbsp;</div>
 <div class="tline"><span class="cmd">$ meshon deploy --prod</span></div>
 <div class="tline"><span class="ok">✓</span> Build succeeded&nbsp;&nbsp;<span class="ok">✓</span> Tests green&nbsp;&nbsp;<span class="ok">✓ Live</span></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <div class="deck" aria-hidden="true"></div>
+      <div class="ground-shadow" aria-hidden="true"></div>
     </div>
-    <div class="ide-caption fade d3">
-      <span><b>Reviewed</b> by engineers</span>
-      <span><b>Approved</b> by you</span>
-      <span><b>Proven</b> by tests</span>
+  </div>
+
+  <div class="ide-caption fade">
+    <span><b>Reviewed</b> by engineers</span>
+    <span><b>Approved</b> by you</span>
+    <span><b>Proven</b> by tests</span>
+  </div>
+</div>
+
+<section id="about" class="alt">
+  <div class="wrap">
+    <div class="kicker fade">About</div>
+    <h2 class="fade d1">We come from different stacks, so we build the whole picture.</h2>
+    <p class="lead fade d2" style="max-width:760px;">Meshon Labs is a founder-led team of engineers from enterprise Java, Python automation, PHP web platforms and applied AI. We started the company together because clients kept needing all of those skills at the same time — so instead of coordinating three vendors, you get one bench that already works as a team.</p>
+    <div class="plans">
+      <div class="plan tilt-wrap fade">
+        <div class="tilt js-tilt">
+          <div class="sheen"></div>
+          <div class="for">Fixed scope</div>
+          <h3 class="layer">Project</h3>
+          <p>A defined system with a clear deadline — scope and price agreed upfront, everything handed over.</p>
+        </div>
+      </div>
+      <div class="plan tilt-wrap fade d1">
+        <div class="tilt js-tilt">
+          <div class="sheen"></div>
+          <div class="for">Monthly</div>
+          <h3 class="layer">Dedicated team</h3>
+          <p>Our engineers work only on your product, month after month — like your own team, without the hiring.</p>
+        </div>
+      </div>
+      <div class="plan tilt-wrap fade d2">
+        <div class="tilt js-tilt">
+          <div class="sheen"></div>
+          <div class="for">Monthly</div>
+          <h3 class="layer">Care &amp; support</h3>
+          <p>For live software — we monitor, maintain and keep improving it, so you never worry about it breaking.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -298,29 +436,47 @@
     <div class="kicker fade">Services</div>
     <h2 class="fade d1">Things we design, build, and run</h2>
     <div class="grid">
-      <div class="card fade">
-        <h3>Custom software</h3>
-        <p>Internal tools, portals and billing systems built around your exact process — not a forced off-the-shelf product.</p>
+      <div class="tilt-wrap fade">
+        <div class="card tilt js-tilt">
+          <div class="sheen"></div>
+          <h3 class="layer">Custom software</h3>
+          <p>Internal tools, portals and billing systems built around your exact process — not a forced off-the-shelf product.</p>
+        </div>
       </div>
-      <div class="card fade d1">
-        <h3>Web platforms</h3>
-        <p>Company sites, customer dashboards and e-commerce that work on every device, fast.</p>
+      <div class="tilt-wrap fade d1">
+        <div class="card tilt js-tilt">
+          <div class="sheen"></div>
+          <h3 class="layer">Web platforms</h3>
+          <p>Company sites, customer dashboards and e-commerce that work on every device, fast.</p>
+        </div>
       </div>
-      <div class="card fade d2">
-        <h3>AI &amp; automation</h3>
-        <p>Chatbots that answer customers, systems that read your documents, agents that handle repetitive work.</p>
+      <div class="tilt-wrap fade d2">
+        <div class="card tilt js-tilt">
+          <div class="sheen"></div>
+          <h3 class="layer">AI &amp; automation</h3>
+          <p>Chatbots that answer customers, systems that read your documents, agents that handle repetitive work.</p>
+        </div>
       </div>
-      <div class="card fade">
-        <h3>Integrations &amp; APIs</h3>
-        <p>Payments, WhatsApp, CRMs and your existing software — connected, so data stops moving by copy-paste.</p>
+      <div class="tilt-wrap fade">
+        <div class="card tilt js-tilt">
+          <div class="sheen"></div>
+          <h3 class="layer">Integrations &amp; APIs</h3>
+          <p>Payments, WhatsApp, CRMs and your existing software — connected, so data stops moving by copy-paste.</p>
+        </div>
       </div>
-      <div class="card fade d1">
-        <h3>Data &amp; reporting</h3>
-        <p>Sales, inventory and team numbers in one live view — decisions from data, not guesswork.</p>
+      <div class="tilt-wrap fade d1">
+        <div class="card tilt js-tilt">
+          <div class="sheen"></div>
+          <h3 class="layer">Data &amp; reporting</h3>
+          <p>Sales, inventory and team numbers in one live view — decisions from data, not guesswork.</p>
+        </div>
       </div>
-      <div class="card fade d2">
-        <h3>Maintenance &amp; support</h3>
-        <p>Updates, fixes, monitoring and improvements after launch — your software keeps working as you grow.</p>
+      <div class="tilt-wrap fade d2">
+        <div class="card tilt js-tilt">
+          <div class="sheen"></div>
+          <h3 class="layer">Maintenance &amp; support</h3>
+          <p>Updates, fixes, monitoring and improvements after launch — your software keeps working as you grow.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -352,7 +508,12 @@
         <p>Launch is day one. We deploy, train your team, document everything, and stay on for monitoring and improvements. You own the code.</p>
       </div>
     </div>
-    <div class="banner fade">You work directly with the people building your product — <b>no account managers, no handoffs</b>, no layers in between.</div>
+    <div class="banner tilt-wrap fade">
+      <div class="tilt js-tilt banner-tilt">
+        <div class="sheen"></div>
+        You work directly with the people building your product — <b class="layer">no account managers, no handoffs</b>, no layers in between.
+      </div>
+    </div>
   </div>
 </section>
 
@@ -414,8 +575,42 @@
     fades.forEach(function (el) { el.classList.add("in"); });
   }
 
-  /* ---------- animated IDE showcase ---------- */
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  /* ---------- laptop entrance + cursor parallax ---------- */
+  var laptop = document.getElementById("laptop");
+  if (laptop && !reduced && "IntersectionObserver" in window) {
+    var laptopIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { laptop.classList.add("in-view"); laptopIo.unobserve(laptop); }
+      });
+    }, { threshold: 0.3 });
+    laptopIo.observe(laptop);
+  } else if (laptop) {
+    laptop.classList.add("in-view");
+  }
+
+  if (laptop && finePointer && !reduced) {
+    var heroStage = laptop.closest(".hero-stage");
+    heroStage.addEventListener("mousemove", function (ev) {
+      var r = heroStage.getBoundingClientRect();
+      var px = (ev.clientX - r.left) / r.width - 0.5;
+      var py = (ev.clientY - r.top) / r.height - 0.5;
+      laptop.style.setProperty("--ry", (px * 7).toFixed(2) + "deg");
+      laptop.style.setProperty("--rz", (px * -2.2).toFixed(2) + "deg");
+      /* slight extra pitch on top of the resting tilt */
+      var base = laptop.classList.contains("in-view") ? 8 : 16;
+      laptop.style.setProperty("--rx", (base + py * -4).toFixed(2) + "deg");
+    });
+    heroStage.addEventListener("mouseleave", function () {
+      laptop.style.setProperty("--ry", "0deg");
+      laptop.style.setProperty("--rz", "0deg");
+      laptop.style.setProperty("--rx", "8deg");
+    });
+  }
+
+  /* ---------- animated IDE showcase ---------- */
   var ide = document.getElementById("ide");
   var codeLines = ide.querySelectorAll(".cline");
   var termLines = ide.querySelectorAll(".tline");
@@ -464,6 +659,26 @@
       });
     }, { threshold: 0.35 });
     ideIo.observe(ide);
+  }
+
+  /* ---------- 3D tilt cards (desktop pointers only) ---------- */
+  if (finePointer && !reduced) {
+    Array.prototype.forEach.call(document.querySelectorAll(".js-tilt"), function (card) {
+      var maxTilt = 7;
+      card.addEventListener("mousemove", function (ev) {
+        var r = card.getBoundingClientRect();
+        var px = (ev.clientX - r.left) / r.width;
+        var py = (ev.clientY - r.top) / r.height;
+        card.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
+        card.style.setProperty("--my", (py * 100).toFixed(1) + "%");
+        var ry = (px - 0.5) * maxTilt * 2;
+        var rx = (0.5 - py) * maxTilt * 2;
+        card.style.transform = "rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg)";
+      });
+      card.addEventListener("mouseleave", function () {
+        card.style.transform = "";
+      });
+    });
   }
 
   /* ---------- contact popup ---------- */
