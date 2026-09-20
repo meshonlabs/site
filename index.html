@@ -488,12 +488,10 @@
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") closeModal(); });
 
   /* ---------- contact form ---------- */
-  /* Paste your Formspree or Web3Forms endpoint here after creating a free
-     account (e.g. "https://formspree.io/f/abcdwxyz"). While empty, the form
-     opens the visitor's mail app with everything pre-filled instead. */
-  var CONTACT_ENDPOINT = "";
-  /* Only needed for Web3Forms (an access key from your dashboard). */
-  var CONTACT_ACCESS_KEY = "";
+  /* Submissions go to Web3Forms, which emails hello@meshonlabs.in. The access
+     key is safe to expose publicly — it only works for our registered inbox. */
+  var CONTACT_ENDPOINT = "https://api.web3forms.com/submit";
+  var CONTACT_ACCESS_KEY = "6c3e3b21-87c4-411f-aef7-397a73c067f7";
 
   var form = document.getElementById("contactForm");
   var statusEl = document.getElementById("cf-status");
@@ -527,9 +525,11 @@
     submitBtn.textContent = "Sending...";
     if (CONTACT_ENDPOINT.indexOf("web3forms") !== -1 && CONTACT_ACCESS_KEY) data.append("access_key", CONTACT_ACCESS_KEY);
     data.append("_replyto", email);
+    data.append("subject", "New project enquiry from " + name);
+    data.append("from_name", "Meshon Labs Website");
     fetch(CONTACT_ENDPOINT, { method: "POST", body: data, headers: { Accept: "application/json" } })
       .then(function (res) {
-        if (res.ok) { form.reset(); showStatus("ok", "Thank you — your message is on its way. We reply within 24 hours."); }
+        if (res.ok) { window.location.href = "/thank-you"; return; }
         else { showStatus("err", "Something went wrong. Please email us directly at hello@meshonlabs.in."); }
       })
       .catch(function () { showStatus("err", "Network error — please email us directly at hello@meshonlabs.in."); })

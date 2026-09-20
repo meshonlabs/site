@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thank you — Meshon Labs</title>
+<meta name="robots" content="noindex" />
+<meta name="description" content="Thank you for contacting Meshon Labs. We reply within 24 hours." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23053476'/%3E%3Ccircle cx='9' cy='11' r='3' fill='%2300d2ff'/%3E%3Ccircle cx='23' cy='9' r='2.4' fill='%23ffffff'/%3E%3Ccircle cx='22' cy='23' r='3' fill='%2300d2ff'/%3E%3Ccircle cx='9' cy='22' r='2.2' fill='%23ffffff'/%3E%3Cpath d='M11 12.5 20.8 9.8M11.5 13 20.5 22M11 21 19.5 12.5' stroke='%237fd8f8' stroke-width='1.2'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --navy: #053476;
+    --ink: #0B1B33;
+    --blue: #0d92c6;
+    --cyan: #00d2ff;
+    --muted: #5A6B85;
+    --soft: #8f9bb3;
+    --bg: #ffffff;
+    --bg-alt: #F4F8FC;
+    --line: #E3EAF3;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
+    line-height: 1.65;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; width: 100%; }
+
+  nav { border-bottom: 1px solid var(--line); background: rgba(255,255,255,.92); }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); font-weight: 700; font-size: 15.5px; }
+  .logo .word b { color: var(--blue); font-weight: 700; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .nav-links a:hover { color: var(--navy); }
+  @media (max-width: 680px) { .nav-links { display: none; } }
+
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 64px 24px; }
+  .card { max-width: 560px; width: 100%; text-align: center; background: #fff; border: 1px solid var(--line);
+          border-radius: 16px; padding: 52px 44px 44px; box-shadow: 0 18px 50px rgba(5,52,118,.08); }
+  .check { display: block; margin: 0 auto 8px; }
+  .check-path { stroke-dasharray: 48; stroke-dashoffset: 48; animation: draw .55s ease .25s forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .pill { display: inline-block; font-family: var(--mono); font-size: 12px; color: var(--blue);
+          border: 1px solid #cfe7f3; background: #F0F9FD; border-radius: 999px; padding: 5px 14px; margin-top: 14px; }
+  h1 { font-size: clamp(28px, 4.5vw, 38px); letter-spacing: -1px; font-weight: 750; color: var(--navy); margin-top: 14px; line-height: 1.2; }
+  .sub { color: var(--muted); margin-top: 14px; font-size: 15.5px; }
+  .actions { margin-top: 28px; }
+  .btn { padding: 13px 26px; border-radius: 9px; font-weight: 600; font-size: 15px; text-decoration: none; display: inline-block; }
+  .btn-primary { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: #0a4a9e; }
+  .note { margin-top: 20px; font-family: var(--mono); font-size: 12.5px; color: var(--soft); }
+  .note b { color: var(--blue); font-weight: 600; }
+  .alt-mail { margin-top: 6px; font-size: 13.5px; color: var(--muted); }
+  .alt-mail a { color: var(--blue); text-decoration: none; font-weight: 600; }
+  .alt-mail a:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--line); padding: 26px 0; color: var(--soft); font-size: 13.5px; }
+  footer .wrap { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--navy); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .check-path { animation: none; stroke-dashoffset: 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="/" aria-label="Meshon Labs home">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#053476"/>
+        <path d="M11 12.5 20.8 9.8M11.5 13 20.5 22M11 21 19.5 12.5" stroke="#7fd8f8" stroke-width="1.2"/>
+        <circle cx="9" cy="11" r="3" fill="#00d2ff"/><circle cx="23" cy="9" r="2.4" fill="#ffffff"/>
+        <circle cx="22" cy="23" r="3" fill="#00d2ff"/><circle cx="9" cy="22" r="2.2" fill="#ffffff"/>
+      </svg>
+      <span class="word">Meshon<b>Labs</b></span>
+    </a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#services">Services</a>
+      <a href="/#process">Process</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="card">
+    <svg class="check" viewBox="0 0 64 64" width="72" height="72" aria-hidden="true">
+      <circle cx="32" cy="32" r="30" fill="#053476"/>
+      <path class="check-path" d="M20 33.5 28.5 42 44 25" fill="none" stroke="#00d2ff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="pill">Message received</div>
+    <h1>Thank you, we&rsquo;ve got it.</h1>
+    <p class="sub">Your message just landed in our inbox. A real person &mdash; not an auto-responder &mdash; will read it and reply within 24 hours, usually much sooner.</p>
+    <div class="actions">
+      <a class="btn btn-primary" id="homeBtn" href="index.html">Back to homepage</a>
+    </div>
+    <p class="note">Taking you back to the homepage in <b id="count">10</b> seconds</p>
+    <p class="alt-mail">In a hurry? Write directly to <a href="mailto:hello@meshonlabs.in">hello@meshonlabs.in</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Meshon Labs</span>
+    <span><a href="mailto:hello@meshonlabs.in">hello@meshonlabs.in</a> &middot; meshonlabs.in</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  /* Works both on the live domain ("/") and when previewing from disk. */
+  var home = /^https?:$/.test(location.protocol) ? "/" : "index.html";
+  document.getElementById("homeBtn").href = home;
+
+  var left = 10;
+  var el = document.getElementById("count");
+  setInterval(function () {
+    left -= 1;
+    if (left <= 0) { window.location.href = home; }
+    else { el.textContent = left; }
+  }, 1000);
+})();
+</script>
+
+</body>
+</html>
