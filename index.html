@@ -488,10 +488,11 @@
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") closeModal(); });
 
   /* ---------- contact form ---------- */
-  /* Submissions POST to our own serverless function (/api/contact), which
-     sends the email server-side via Resend. The API key lives only in Vercel
-     environment variables — nothing secret in this file. */
-  var CONTACT_ENDPOINT = "/api/contact";
+  /* Submissions go to Web3Forms, which emails hello@meshonlabs.in. The access
+     key is injected at deploy time from the Vercel environment variable
+     CONTACT_ACCESS_KEY (see build.mjs) — it is not stored in this repository. */
+  var CONTACT_ENDPOINT = "https://api.web3forms.com/submit";
+  var CONTACT_ACCESS_KEY = "__CONTACT_ACCESS_KEY__";
 
   var form = document.getElementById("contactForm");
   var statusEl = document.getElementById("cf-status");
@@ -510,23 +511,29 @@
     var message = (data.get("message") || "").toString().trim();
     if (!name || !email || !message) { showStatus("err", "Please fill in your name, email and message."); return; }
 
+    /* Key not configured (local preview or env var missing): mail fallback. */
+    if (!CONTACT_ACCESS_KEY || CONTACT_ACCESS_KEY.charAt(0) === "_") {
+      var body = "Name: " + name + "\nEmail: " + email +
+        "\nPhone: " + (data.get("phone") || "-") +
+        "\n\n" + message;
+      window.location.href = "mailto:hello@meshonlabs.in" +
+        "?subject=" + encodeURIComponent("Project enquiry from " + name) +
+        "&body=" + encodeURIComponent(body);
+      showStatus("ok", "Opening your email app — press send and we will reply within 24 hours.");
+      return;
+    }
+
     submitBtn.disabled = true;
     submitBtn.textContent = "Sending...";
-    fetch(CONTACT_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        name: name,
-        email: email,
-        phone: (data.get("phone") || "").toString().trim(),
-        message: message,
-        _gotcha: (data.get("_gotcha") || "").toString()
-      })
-    })
+    data.append("access_key", CONTACT_ACCESS_KEY);
+    data.append("subject", "New project enquiry from " + name);
+    data.append("from_name", "Meshon Labs Website");
+    data.append("_replyto", email);
+    fetch(CONTACT_ENDPOINT, { method: "POST", body: data, headers: { Accept: "application/json" } })
       .then(function (res) {
         if (res.ok) { window.location.href = "/thank-you"; return; }
         return res.json().catch(function () { return {}; }).then(function (j) {
-          showStatus("err", (j && j.error) ? j.error : "Something went wrong. Please email us directly at hello@meshonlabs.in.");
+          showStatus("err", (j && j.message) ? j.message : "Something went wrong. Please email us directly at hello@meshonlabs.in.");
         });
       })
       .catch(function () { showStatus("err", "Network error — please email us directly at hello@meshonlabs.in."); })
